@@ -5,9 +5,6 @@ from datetime import datetime
 from bson import ObjectId
 from pymongo import MongoClient, ASCENDING, DESCENDING
 from dotenv import load_dotenv
-from firestore_adapter import FirestoreDatabaseAdapter
-from realtime_adapter import RealtimeDatabaseAdapter
-
 try:
     import mongomock
 except ImportError:
@@ -56,36 +53,6 @@ db = None
 DB_BACKEND = "mongodb"
 
 
-def connect_to_firebase():
-    """Initialize Firebase and expose it through a small Mongo-like adapter."""
-    if not FIREBASE_CREDENTIALS:
-        raise ValueError(
-            "FIREBASE_CREDENTIALS or GOOGLE_APPLICATION_CREDENTIALS is required "
-            "to use Firebase as a fallback database."
-        )
-
-    try:
-        import firebase_admin
-        from firebase_admin import credentials, db as realtime_db, firestore
-    except ImportError as import_error:
-        raise ImportError(
-            "firebase-admin is not installed. Run `pip install -r requirements.txt` "
-            "after adding Firebase fallback support."
-        ) from import_error
-
-    if not firebase_admin._apps:
-        cred = credentials.Certificate(FIREBASE_CREDENTIALS)
-        options = {}
-        if FIREBASE_PROJECT_ID:
-            options["projectId"] = FIREBASE_PROJECT_ID
-        if FIREBASE_DATABASE_URL:
-            options["databaseURL"] = FIREBASE_DATABASE_URL
-        firebase_admin.initialize_app(cred, options)
-
-    if FIREBASE_DATABASE_URL:
-        return RealtimeDatabaseAdapter(realtime_db)
-
-    return FirestoreDatabaseAdapter(firestore.client())
 
 
 # Step 1: Try MongoDB Atlas
@@ -101,16 +68,6 @@ if MONGO_URI:
         print(f"⚠️  Failed to connect to MongoDB Atlas: {str(e)}")
 else:
     print("⚠️  No MONGO_URI provided; skipping connection to MongoDB Atlas.")
-
-# Step 2: Fallback to Firebase
-if db is None:
-    try:
-        print("\n🔥 Attempting fallback to Firebase...")
-        db = connect_to_firebase()
-        DB_BACKEND = getattr(db, "backend", "firebase")
-        print(f"✅ Connected to Firebase ({DB_BACKEND}) (FALLBACK)")
-    except Exception as firebase_e:
-        print(f"❌ Firebase fallback unavailable: {firebase_e}")
 
 # Step 3: Fallback to local MongoDB
 if db is None and DEV_MODE:
