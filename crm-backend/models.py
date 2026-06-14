@@ -5,10 +5,7 @@ from datetime import datetime
 from bson import ObjectId
 from pymongo import MongoClient, ASCENDING, DESCENDING
 from dotenv import load_dotenv
-try:
-    import mongomock
-except ImportError:
-    mongomock = None
+import mongomock
 
 # Load env vars
 load_dotenv()
@@ -85,16 +82,10 @@ if db is None and DEV_MODE:
 # Step 4: Fallback to in-memory mongomock
 if db is None:
     print("\n🧪 Attempting final fallback to in-memory MongoDB (mongomock)...")
-    if mongomock is not None:
-        client = mongomock.MongoClient()
-        db = client[DB_NAME]
-        DB_BACKEND = "mongodb-memory"
-        print("✅ Connected to in-memory MongoDB fallback (mongomock)")
-    else:
-        raise ConnectionError(
-            "MongoDB Atlas, Firebase, and local MongoDB are unavailable. "
-            "Install mongomock for in-memory fallback: pip install mongomock"
-        )
+    client = mongomock.MongoClient()
+    db = client[DB_NAME]
+    DB_BACKEND = "mongodb-memory"
+    print("✅ Connected to in-memory MongoDB fallback (mongomock)")
 
 # Collections
 customers_col = db["customers"]
