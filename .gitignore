@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Environment & secrets
+.env
+.env.*
+*.pem
+crm-backend/firebase-service-account.json
+crm-backend/*firebase*.json
+crm-backend/*service-account*.json
+
+# Build output
+frontend/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Package locks (optional - keep package-lock.json)
+# package-lock.json
+
+# Python
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/

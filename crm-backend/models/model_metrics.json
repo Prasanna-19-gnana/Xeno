@@ -1,0 +1,17 @@
+{
+  "trained_at": "2026-06-13T15:10:13.283280",
+  "total_customers": 3900,
+  "total_features": 9,
+  "average_spend": 59.76435897435898,
+  "average_orders": 1.0,
+  "age_range": {
+    "min": 18,
+    "max": 70,
+    "mean": 44.06846153846154
+  },
+  "spend_range": {
+    "min": 20,
+    "max": 100,
+    "mean": 59.76435897435898
+  }
+}
