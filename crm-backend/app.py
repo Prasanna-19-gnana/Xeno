@@ -32,6 +32,13 @@ app.json_encoder = MongoDBJSONEncoder  # Use custom encoder for JSON responses
 # Enable CORS for all domains to ease frontend integration
 CORS(app)
 
+from seed_data import seed_database
+from models import customers_col
+
+# Auto-seed the database if it is empty (Stateless mode)
+if customers_col.count_documents({}) == 0:
+    print("Auto-seeding database on startup from CSV...")
+    seed_database()
 
 @app.before_request
 def capture_audit_context():
