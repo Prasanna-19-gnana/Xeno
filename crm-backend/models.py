@@ -69,11 +69,22 @@ class FakeCollection:
         return self
         
     def aggregate(self, pipeline, *args, **kwargs): 
-        # Dummy data for dashboard aggregation queries
+        # Dummy data for dashboard aggregation queries to prevent KeyErrors
         if self.name == "orders":
-            return [{"_id": "Completed", "revenue": 10000, "count": len(self.data)}]
+            return [{
+                "_id": None, 
+                "total_orders": len(self.data) or 10, 
+                "total_revenue": 15000, 
+                "revenue": 15000
+            }]
         elif self.name == "communications":
-            return [{"_id": "sent", "count": len(self.data)}]
+            return [
+                {"_id": "sent", "count": 100},
+                {"_id": "delivered", "count": 90},
+                {"_id": "opened", "count": 50},
+                {"_id": "clicked", "count": 20},
+                {"_id": "converted", "count": 5}
+            ]
         return []
         
     def count_documents(self, query=None, *args, **kwargs): 
