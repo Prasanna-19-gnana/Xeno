@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from flask import Flask, jsonify, g, request
 from flask_cors import CORS
-from bson import ObjectId
+
 from dotenv import load_dotenv
 
 from models import DB_BACKEND, init_db, db, log_activity, serialize_to_json
@@ -21,9 +21,8 @@ load_dotenv()
 # Custom JSON Encoder for MongoDB/BSON types
 class MongoDBJSONEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, ObjectId):
-            return str(obj)
-        elif isinstance(obj, datetime):
+
+        if isinstance(obj, datetime):
             return obj.isoformat()
         return super().default(obj)
 
