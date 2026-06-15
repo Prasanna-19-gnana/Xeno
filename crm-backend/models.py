@@ -68,6 +68,12 @@ class FakeCollection:
             self.data.remove(doc)
         return self
         
+    def delete_many(self, query, *args, **kwargs):
+        # Extremely basic implementation: if query is empty, clear everything
+        if not query:
+            self.data.clear()
+        return self
+        
     def aggregate(self, pipeline, *args, **kwargs): 
         # Dummy data for dashboard aggregation queries to prevent KeyErrors
         if self.name == "orders":
