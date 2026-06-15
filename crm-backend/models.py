@@ -56,6 +56,13 @@ class FakeCollection:
         self.data.append(document)
         return type('obj', (object,), {'inserted_id': document["_id"]})()
         
+    def insert_many(self, documents, *args, **kwargs):
+        for doc in documents:
+            if "_id" not in doc:
+                doc["_id"] = str(uuid.uuid4())
+            self.data.append(doc)
+        return type('obj', (object,), {'inserted_ids': [d["_id"] for d in documents]})()
+        
     def update_one(self, query, update, *args, **kwargs): 
         doc = self.find_one(query)
         if doc and "$set" in update:
